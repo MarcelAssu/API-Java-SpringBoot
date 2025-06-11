@@ -21,18 +21,21 @@ public class AuthController {
 	
 		private final UserServices service;
 	
-		public AuthController() {
+		public AuthController(UserServices service) {
 			super();
-			this.service = new UserServices();
+			this.service = service;
 		}
 
 
 		@PostMapping ("/signup")
 		public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception{
+			
 			// Criamos a entidade (novo objeto)
 			UserEntity user = new UserEntity();
+			
 			// Copia-se as propriedades da DTO para a entidade
 			BeanUtils.copyProperties(dto, user);
+			
 			//Seta os valores que não vieram no DTO
 			user.setType(UserType.Common);
 			
