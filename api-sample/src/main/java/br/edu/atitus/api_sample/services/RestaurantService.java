@@ -39,11 +39,18 @@ public class RestaurantService {
         restaurant.setName(restaurant.getName().trim());
 
        
+		if (restaurant.getLatitude() < -90 || restaurant.getLatitude() > 90)
+			throw new Exception("Latitude Inválida");
+		
+		if (restaurant.getLongitude() < -180 || restaurant.getLongitude() > 180)
+			throw new Exception("Longitude Inválida");
+        
         if (restaurant.getId() != null) {
             Optional<RestaurantEntity> existingRestaurantOpt = repository.findById(restaurant.getId());
             if (existingRestaurantOpt.isEmpty()) {
                 throw new Exception("Restaurante com ID " + restaurant.getId() + " não encontrado para atualização.");
             }
+            
             RestaurantEntity existingRestaurant = existingRestaurantOpt.get();
             if (!existingRestaurant.getUser().getId().equals(userAuth.getId()) && userAuth.getType() != UserType.Admin) {
                 throw new Exception("Você não tem permissão para alterar este restaurante.");

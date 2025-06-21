@@ -20,6 +20,12 @@ public class RestaurantEntity {
 
     @Column(length = 100, nullable = false)
     private String name;
+    
+	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
+	private double latitude;
+	
+	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
+	private double longitude;
 
     @Column(length = 250) 
     private String description;
@@ -82,4 +88,20 @@ public class RestaurantEntity {
     public void setUser(UserEntity user) {
         this.user = user;
     }
+    
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
 }
