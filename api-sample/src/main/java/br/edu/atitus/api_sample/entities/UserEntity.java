@@ -1,9 +1,11 @@
 package br.edu.atitus.api_sample.entities;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,24 +23,27 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails{
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
-	
+
 	@Column(length = 100, nullable = false)
 	private String name;
-	
-	@Column(length = 100, nullable = false)
+
+	@Column(length = 100, nullable = false, unique = true) 
 	private String email;
-	
+
 	@Column(length = 100, nullable = false)
 	@JsonIgnore
 	private String password;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
 	private UserType type;
+
+    @Column(nullable = false)
+    private boolean enabled;
 
 	public UUID getId() {
 		return id;
@@ -80,16 +85,38 @@ public class UserEntity implements UserDetails{
 		this.type = type;
 	}
 
+    public boolean isEnabled() { 
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return List.of(new SimpleGrantedAuthority(type.name())); 
 	}
 
 	@Override
 	public String getUsername() {
-		return this.email;
+		return this.email; 
 	}
-	
-	
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true; 
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true; 
+	}
 }
