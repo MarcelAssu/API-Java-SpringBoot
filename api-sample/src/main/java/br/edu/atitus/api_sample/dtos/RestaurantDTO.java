@@ -6,6 +6,6 @@ public record RestaurantDTO(
     String description,
     String phone,
     String address,
-    double latitude, 
-    double longitude
+    Double latitude, 
+    Double longitude
 ) {}
