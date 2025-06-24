@@ -35,9 +35,9 @@ public class UserServices implements UserDetailsService{
 		user.setEmail(user.getEmail().trim().toLowerCase());
 
 		
-		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})+$";
+		 String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		if (!user.getEmail().matches(emailRegex)) {
-		    throw new Exception("Formato de e-mail inválido. Deve conter @ e ao menos dois domínios (ex: email@dominio.com.br)");
+		    throw new Exception("Formato de e-mail inválido. Deve conter @ e ao menos dois domínios (ex: email@dominio.com)");
 		}
 
 		if (user.getPassword() == null

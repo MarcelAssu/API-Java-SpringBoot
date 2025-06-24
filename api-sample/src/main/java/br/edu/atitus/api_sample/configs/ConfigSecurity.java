@@ -24,11 +24,11 @@ public class ConfigSecurity {
 		http.csrf(csrf -> csrf.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/auth/**").permitAll()
-					.requestMatchers(HttpMethod.POST, "/ws/restaurant/**").hasAnyAuthority(UserType.RestaurantOwner.name(), UserType.Admin.name())
-					
-					.requestMatchers("/ws**", "/ws/**").authenticated()
-					.anyRequest().permitAll()) 
+			        .requestMatchers("/auth/**").permitAll()
+			        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+			        .requestMatchers("/ws/restaurant/**").hasAuthority(UserType.Common.name())
+			        .requestMatchers("/ws/**").authenticated() 
+			        .anyRequest().permitAll())
 			.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -40,7 +40,9 @@ public class ConfigSecurity {
 
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*");
+				registry.addMapping("/**")
+				.allowedMethods("POST","PUT", "GET", "DELETE", "OPTIONS")
+				.allowedOrigins("*");
 			}
 		};
 	}
