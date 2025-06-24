@@ -20,26 +20,19 @@ public class RestaurantEntity {
 
     @Column(length = 100, nullable = false)
     private String name;
-    
-	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
-	private Double latitude;
-	
-	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
-	private Double longitude;
 
-    @Column(length = 250) 
-    private String description;
+    @Column(columnDefinition = "Decimal(17,14)", nullable = false)
+    private Double latitude;
 
-    @Column(length = 20) 
-    private String phone;
+    @Column(columnDefinition = "Decimal(17,14)", nullable = false)
+    private Double longitude;
 
     @Column(length = 250)
-    private String address;
+    private String description;
 
-    @ManyToOne 
-    @JoinColumn(name = "id_user", nullable = false) 
-    private UserEntity user; 
-
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private UserEntity user;
     
     public UUID getId() {
         return id;
@@ -63,22 +56,6 @@ public class RestaurantEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public UserEntity getUser() {

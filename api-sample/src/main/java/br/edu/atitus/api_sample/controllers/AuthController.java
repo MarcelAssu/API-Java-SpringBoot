@@ -51,18 +51,18 @@ public class AuthController {
 
 
 	@PostMapping ("/signup")
-	public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception{
+	public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception {
 
-		UserEntity user = new UserEntity();
+	    UserEntity user = new UserEntity();
+	    BeanUtils.copyProperties(dto, user);
 
-		BeanUtils.copyProperties(dto, user);
+	   
+	    user.setType(UserType.Common);
+	    user.setEnabled(true);
 
-		user.setType(dto.userType() != null ? dto.userType() : UserType.Common);
-		user.setEnabled(true);
+	    service.save(user);
 
-		service.save(user);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
 
 	@ExceptionHandler(value = Exception.class)

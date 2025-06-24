@@ -38,7 +38,7 @@ public class RestaurantController {
     public ResponseEntity<RestaurantEntity> findById(@PathVariable UUID id) throws Exception {
         return restaurantService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new Exception("Restaurante com ID " + id + " não encontrado."));
+                .orElseThrow(() -> new Exception("Restaurante com ID " + id + " não encontrado para este usuário."));
     }
 
     @PutMapping("/{id}")

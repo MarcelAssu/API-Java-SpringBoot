@@ -12,8 +12,6 @@ import java.util.UUID;
 @Repository
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity, UUID> {
 
-    boolean existsByLatitudeAndLongitude(Double latitude, Double longitude);
-
     List<RestaurantEntity> findByUser(UserEntity user);
 
 

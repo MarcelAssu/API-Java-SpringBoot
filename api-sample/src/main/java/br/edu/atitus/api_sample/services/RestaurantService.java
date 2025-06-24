@@ -1,4 +1,4 @@
-// Path: src/main/java/br/edu/atitus/api_sample/services/RestaurantService.java
+
 package br.edu.atitus.api_sample.services;
 
 import br.edu.atitus.api_sample.entities.RestaurantEntity;
@@ -27,8 +27,8 @@ public class RestaurantService {
         UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 
-        if (userAuth.getType() != UserType.RestaurantOwner && userAuth.getType() != UserType.Admin) {
-            throw new Exception("Apenas Donos de Restaurante ou Administradores podem cadastrar/atualizar restaurantes.");
+        if (userAuth.getType() != UserType.Common) {
+            throw new Exception("Apenas usuários do tipo Comum podem cadastrar ou atualizar restaurantes.");
         }
 
         if (restaurant == null) {
@@ -39,7 +39,6 @@ public class RestaurantService {
         }
         restaurant.setName(restaurant.getName().trim());
 
-        // Validação dos novos campos
         if (restaurant.getLatitude() == null || restaurant.getLatitude() < -90 || restaurant.getLatitude() > 90) {
             throw new Exception("Valor de Latitude é inválido.");
         }
@@ -55,16 +54,13 @@ public class RestaurantService {
                 throw new Exception("Restaurante com ID " + restaurant.getId() + " não encontrado para atualização.");
             }
             RestaurantEntity existingRestaurant = existingRestaurantOpt.get();
-            if (!existingRestaurant.getUser().getId().equals(userAuth.getId()) && userAuth.getType() != UserType.Admin) {
+            if (!existingRestaurant.getUser().getId().equals(userAuth.getId())) {
                 throw new Exception("Você não tem permissão para alterar este restaurante.");
             }
 
             restaurant.setUser(existingRestaurant.getUser());
         } else {
-            // Nova validação: só executa para novos restaurantes
-            if (repository.existsByLatitudeAndLongitude(restaurant.getLatitude(), restaurant.getLongitude())) {
-                throw new Exception("Já existe um restaurante cadastrado com esta latitude e longitude.");
-            }
+        	
             restaurant.setUser(userAuth);
         }
 
@@ -72,11 +68,15 @@ public class RestaurantService {
     }
 
     public List<RestaurantEntity> findAll() {
-        return repository.findAll();
+        UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      
+        return repository.findByUser(userAuth);
     }
 
     public Optional<RestaurantEntity> findById(UUID id) {
-        return repository.findById(id);
+        UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        return repository.findByIdAndUser(id, userAuth);
     }
 
     @Transactional
@@ -90,8 +90,7 @@ public class RestaurantService {
 
         RestaurantEntity restaurant = restaurantOpt.get();
 
-
-        if (!restaurant.getUser().getId().equals(userAuth.getId()) && userAuth.getType() != UserType.Admin) {
+        if (!restaurant.getUser().getId().equals(userAuth.getId())) {
             throw new Exception("Você não tem permissão para deletar este restaurante.");
         }
 
